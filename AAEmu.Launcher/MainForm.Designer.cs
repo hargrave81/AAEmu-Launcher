@@ -1,4 +1,7 @@
-﻿namespace AAEmu.Launcher
+﻿using System;
+using System.ComponentModel;
+
+namespace AAEmu.Launcher
 {
     partial class LauncherForm
     {
@@ -1347,6 +1350,7 @@
 
         }
 
+       
         #endregion
         private System.Windows.Forms.TextBox eLogin;
         private System.Windows.Forms.TextBox ePassword;
