@@ -3898,6 +3898,24 @@ namespace AAEmu.Launcher
             Close();
         }
 
+
+
+        private void btnSettings_MouseLeave(object sender, EventArgs e)
+        {
+            throw new NotImplementedException();
+        }
+
+        private void btnSettings_MouseEnter(object sender, EventArgs e)
+        {
+            throw new NotImplementedException();
+        }
+
+
+        private void bntRegister_Click(object sender, EventArgs e)
+        {
+            throw new NotImplementedException();
+        }
+
         private void btnClose_MouseEnter(object sender, EventArgs e)
         {
             btnClose.Image = Properties.Resources.btn_exit_active;
@@ -3989,5 +4007,563 @@ namespace AAEmu.Launcher
         {
 
         }
+
+        
+        private void bgwClient_DoWork(object sender, DoWorkEventArgs e)
+        {
+            //------
+            // Init
+            //------
+            aaPatcher.Fase = PatchFase.Init;
+            bgwPatcher.ReportProgress(0, aaPatcher);
+            System.Threading.Thread.Sleep(150);
+            try
+            {
+                DirectoryInfo patchDirInfo = Directory.CreateDirectory(aaPatcher.localPatchDirectory);
+            }
+            catch
+            {
+                // Failed to create temp patch directory, quit trying to update
+                aaPatcher.Fase = PatchFase.Error;
+                aaPatcher.ErrorMsg = string.Format(L.FailedCreateDirectory, aaPatcher.localPatchDirectory);
+                return;
+            }
+            System.Threading.Thread.Sleep(150);
+
+            aaPatcher.Fase = PatchFase.CalculateDownloads;
+            bgwPatcher.ReportProgress(1, aaPatcher);
+            System.Threading.Thread.Sleep(250);
+
+            List<Zip7File> remoteFileList = new List<Zip7File>();
+
+            //------------------------
+            // Download PatchFileInfo
+            //------------------------
+            aaPatcher.Fase = PatchFase.DownloadPatchFilesInfo;
+            bgwPatcher.ReportProgress(2, aaPatcher);
+
+            // connect to FTP
+            try
+            {
+                FluentFTP.FtpClient client = new FluentFTP.FtpClient("aa.imgdelivered.com", 23, new FluentFTP.FtpConfig() { EncryptionMode = FluentFTP.FtpEncryptionMode.Auto });
+                client.Connect(new FluentFTP.FtpProfile() { Credentials = new System.Net.NetworkCredential("aa", "AA123456789") });
+                if (!client.IsConnected)
+                {
+                    aaPatcher.Fase = PatchFase.Error;
+                    aaPatcher.ErrorMsg = "Failed to connect to client download server.";
+                    return;
+                }
+                var downloadables = client.GetListing();
+                foreach (var download in downloadables)
+                {
+                    remoteFileList.Add(new Zip7File() { Remote = download.FullName, Local = download.Name, Size = download.Size });
+                }
+            }
+            catch (Exception ex)
+            {
+                aaPatcher.Fase = PatchFase.Error;
+                aaPatcher.ErrorMsg = "Failed to connect to client download server.";
+                return;
+            }
+
+            if (remotePatchFilesHash != aaPatcher.remotePatchFileHash)
+            {
+                aaPatcher.Fase = PatchFase.Error;
+                aaPatcher.ErrorMsg = string.Format(L.PatchHashMismatch, remotePatchFilesHash, aaPatcher.remotePatchFileHash);
+                return;
+            }
+
+            // Generate a files list in our pak files' format from the downloaded CSV
+            remotePakFileList = CreateXlFileListFromStream(ms);
+
+            System.Threading.Thread.Sleep(250);
+
+            //--------------------------------------------------------------------------------------
+            // Compare local game_pak with downloaded information to check what needs to be updated
+            //--------------------------------------------------------------------------------------
+            aaPatcher.Fase = PatchFase.CalculateDownloads;
+            bgwPatcher.ReportProgress(0, aaPatcher);
+
+            // First sort both to speed things up
+            pak.Files.Sort();
+            remotePakFileList.Sort();
+
+            long totSize = 0;
+            for (int i = 0; i < remotePakFileList.Count; i++)
+            {
+                AAPakFileInfo r = remotePakFileList[i];
+
+                // Don't download empty files or entries marked as directories (-1)
+                if (r.Size <= 0) continue;
+
+                var l = FindPatchFileInSortedList(r.Name, pak.Files);
+                if (l == null)
+                {
+                    // We don't have a local copy of this file
+                    // Add it to the list
+                    dlPakFileList.Add(r);
+                    totSize += r.Size;
+                }
+                else
+                {
+
+                    if ((l.Size != r.Size) || (l.Md5.SequenceEqual(r.Md5) == false))
+                    {
+                        // Local Filesize or Hash is different from remote
+                        // Redownload it
+                        dlPakFileList.Add(r);
+                        totSize += r.Size;
+                    }
+                }
+
+                if ((i % 100) == 0)
+                {
+                    int p = i * 100 / remotePakFileList.Count;
+                    bgwPatcher.ReportProgress(p, aaPatcher);
+                    // System.Threading.Thread.Sleep(1);
+                }
+            }
+            aaPatcher.FileDownloadSizeTotal = totSize;
+
+            if ((aaPatcher.FileDownloadSizeTotal <= 0) || (dlPakFileList.Count <= 0))
+            {
+                aaPatcher.Fase = PatchFase.Done;
+                aaPatcher.DoneMsg = L.NoFilesToUpdate;
+                return;
+            }
+
+            //-------------------------------------------------
+            // Initialize download.patch file (patch pak file)
+            //-------------------------------------------------
+            if (PatchDownloadPak == null)
+                PatchDownloadPak = new AAPak("");
+
+            if (!File.Exists(aaPatcher.localPatchDirectory + localPatchPakFileName))
+            {
+                try
+                {
+                    if (!PatchDownloadPak.NewPak(aaPatcher.localPatchDirectory + localPatchPakFileName))
+                    {
+                        aaPatcher.Fase = PatchFase.Error;
+                        aaPatcher.ErrorMsg = string.Format(L.ErrorCreatingPatchCache, aaPatcher.localPatchDirectory + localPatchPakFileName);
+                        return;
+                    }
+                    PatchDownloadPak.SaveHeader();
+                    PatchDownloadPak.ClosePak();
+                }
+                catch (Exception x)
+                {
+                    aaPatcher.Fase = PatchFase.Error;
+                    aaPatcher.ErrorMsg = string.Format(L.ErrorCreatingPatchCache, x.Message);
+                    return;
+                }
+            }
+
+            PatchDownloadPak.OpenPak(aaPatcher.localPatchDirectory + localPatchPakFileName, false);
+            if (!PatchDownloadPak.IsOpen)
+            {
+                // TODO: Add better support in case of fails
+                //aaPatcher.Fase = PatchFase.Error;
+                //aaPatcher.ErrorMsg = "Failed to open patch cache for writing, might be corrupted !";
+                //return;
+                MessageBox.Show(L.FailedToOpenPatchCache, "CACHE ERROR", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                try
+                {
+                    PatchDownloadPak.ClosePak();
+                    PatchDownloadPak.NewPak(aaPatcher.localPatchDirectory + localPatchPakFileName);
+                }
+                catch
+                {
+                    PatchDownloadPak = null;
+                }
+
+                if ((PatchDownloadPak == null) || (!PatchDownloadPak.IsOpen))
+                {
+                    aaPatcher.Fase = PatchFase.Error;
+                    aaPatcher.ErrorMsg = L.FatalErrorFailedToOpenFileForWrite;
+                    return;
+                }
+            }
+
+            // Generate a list of files to download
+            // Skip any file that is already in our download.patch
+            List<string> sl = new List<string>();
+
+            totSize = 0; // calculate this again on the final list
+            for (int i = dlPakFileList.Count - 1; i >= 0; i--)
+            {
+                if (PatchDownloadPak.FileExists(dlPakFileList[i].Name))
+                {
+                    dlPakFileList.Remove(dlPakFileList[i]);
+                }
+                else
+                {
+                    totSize += dlPakFileList[i].Size;
+                    sl.Add(dlPakFileList[i].Name);
+                }
+            }
+            aaPatcher.FileDownloadSizeTotal = totSize;
+
+            // debug file to check what we'll download
+            File.WriteAllLines(aaPatcher.localPatchDirectory + "download.txt", sl);
+
+            // MessageBox.Show("Need to download " + dlPakFileList.Count.ToString() + " files, "+ (aaPatcher.FileDownloadSizeTotal / 1024 / 1024).ToString() + " MB total");
+
+            System.Threading.Thread.Sleep(500);
+
+            //-------------------
+            // Do download stuff
+            //-------------------
+            aaPatcher.Fase = PatchFase.DownloadFiles;
+            bgwPatcher.ReportProgress(0, aaPatcher);
+
+            aaPatcher.FileDownloadSizeDownloaded = 0;
+            for (int i = dlPakFileList.Count - 1; i >= 0; i--)
+            {
+                AAPakFileInfo pfi = dlPakFileList[i];
+                var fileDLurl = Setting.ServerGameUpdateURL + pfi.Name;
+
+                try
+                {
+                    Stream fileDL = WebHelper.SimpleGetURIAsMemoryStream(fileDLurl);
+                    if (fileDL.Length != pfi.Size)
+                    {
+                        aaPatcher.Fase = PatchFase.Error;
+                        aaPatcher.ErrorMsg = string.Format(L.DownloadSizeMismatch, fileDLurl, pfi.Size.ToString(), fileDL.Length.ToString());
+                        fileDL.Dispose();
+                        return;
+                    }
+                    fileDL.Position = 0;
+                    var fileHash = WebHelper.GetMD5FromStream(fileDL);
+                    var expectHash = BitConverter.ToString(pfi.Md5).Replace("-", "").ToLower();
+                    if (fileHash != expectHash)
+                    {
+                        aaPatcher.Fase = PatchFase.Error;
+                        aaPatcher.ErrorMsg = string.Format(L.DownloadHashMismatch, fileDLurl, expectHash, fileHash);
+                        fileDL.Dispose();
+                        return;
+                    }
+                    var addpfi = PatchDownloadPak.NullAAPakFileInfo;
+                    fileDL.Position = 0;
+                    var addRes = PatchDownloadPak.AddFileFromStream(pfi.Name, fileDL, DateTime.FromFileTime(pfi.CreateTime), DateTime.FromFileTime(pfi.ModifyTime), false, out addpfi);
+                    if (!addRes)
+                    {
+                        aaPatcher.Fase = PatchFase.Error;
+                        aaPatcher.ErrorMsg = string.Format(L.FailedToSaveCache, pfi.Name);
+                        fileDL.Dispose();
+                        return;
+                    }
+                    fileDL.Dispose();
+                }
+                catch
+                {
+                    aaPatcher.Fase = PatchFase.Error;
+                    aaPatcher.ErrorMsg = string.Format(L.DownloadFileError, fileDLurl);
+                    return;
+                }
+
+                aaPatcher.FileDownloadSizeDownloaded += pfi.Size;
+
+                var dlprogress = (aaPatcher.FileDownloadSizeDownloaded * 100) / aaPatcher.FileDownloadSizeTotal;
+                bgwPatcher.ReportProgress((int)dlprogress, aaPatcher);
+            }
+            PatchDownloadPak.SaveHeader();
+
+            //------------------------------------
+            // Check if we need to extract the DB
+            //------------------------------------
+            bool exportDBAsWell = false;
+            var dbNameInPak = "game/db/compact.sqlite3";
+            if (PatchDownloadPak.FileExists(dbNameInPak))
+            {
+                Stream testStream = PatchDownloadPak.ExportFileAsStream(dbNameInPak);
+                if (IsValidSQLiteFile(testStream))
+                    exportDBAsWell = true;
+                testStream.Dispose();
+            }
+            var bin32Dir = "bin32/";
+
+            //--------------------------------------------------------------------------------------
+            // Recalculate the total size to apply (including data to copy outside of the game_pak)
+            //--------------------------------------------------------------------------------------
+            aaPatcher.FileDownloadSizeTotal = 0;
+            foreach (AAPakFileInfo pfi in PatchDownloadPak.Files)
+            {
+                aaPatcher.FileDownloadSizeTotal += pfi.Size;
+                // Count files inside bin32 twice
+                if ((pfi.Name.Length > bin32Dir.Length) && (pfi.Name.Substring(0, bin32Dir.Length) == bin32Dir))
+                {
+                    aaPatcher.FileDownloadSizeTotal += pfi.Size;
+                }
+                // count compact.sqlite3 twice if it's not encrypted
+                if ((pfi.Name == dbNameInPak) && (exportDBAsWell))
+                {
+                    aaPatcher.FileDownloadSizeTotal += pfi.Size;
+                }
+            }
+
+
+            aaPatcher.FileDownloadSizeDownloaded = 0; // using downloadedsize as progress bar
+            aaPatcher.Fase = PatchFase.AddFiles;
+            //---------------------------------------------
+            // Apply downloaded files, export where needed
+            //---------------------------------------------
+            foreach (AAPakFileInfo pfi in PatchDownloadPak.Files)
+            {
+                Stream exportStream = PatchDownloadPak.ExportFileAsStream(pfi);
+                exportStream.Position = 0;
+                var respfi = pak.NullAAPakFileInfo;
+                var addRes = pak.AddFileFromStream(pfi.Name, exportStream, DateTime.FromFileTime(pfi.CreateTime), DateTime.FromFileTime(pfi.ModifyTime), false, out respfi);
+                if (!addRes)
+                {
+                    aaPatcher.Fase = PatchFase.Error;
+                    aaPatcher.ErrorMsg = string.Format(L.ErrorPatchApplyFile, pfi.Name);
+                    exportStream.Dispose();
+                    return;
+                }
+                aaPatcher.FileDownloadSizeDownloaded += pfi.Size;
+
+                // always export files inside bin32
+                var exportErrorCount = 0;
+                if ((pfi.Name.Length > bin32Dir.Length) && (pfi.Name.Substring(0, bin32Dir.Length) == bin32Dir))
+                {
+                    var fileOK = true;
+                    while (fileOK)
+                    {
+                        fileOK = false;
+                        try
+                        {
+                            var destName = aaPatcher.localGameFolder + pfi.Name.Replace('/', Path.DirectorySeparatorChar);
+                            Directory.CreateDirectory(Path.GetDirectoryName(destName));
+                            FileStream fs = new FileStream(destName, FileMode.Create);
+                            exportStream.Position = 0;
+
+                            exportStream.CopyTo(fs);
+
+                            fs.Dispose();
+
+                            // Update file details
+                            File.SetCreationTime(destName, DateTime.FromFileTime(pfi.CreateTime));
+                            File.SetLastWriteTime(destName, DateTime.FromFileTime(pfi.ModifyTime));
+                            aaPatcher.FileDownloadSizeDownloaded += pfi.Size;
+                            fileOK = true;
+                        }
+                        catch
+                        {
+                            exportStream.Dispose();
+                        }
+
+                        if (!fileOK)
+                        {
+                            // Something went wrong while exporting
+                            var retryRes = MessageBox.Show(string.Format(L.ErrorPatchExportFile, pfi.Name), L.AddFiles, MessageBoxButtons.AbortRetryIgnore);
+                            switch (retryRes)
+                            {
+                                case DialogResult.Retry:
+                                    fileOK = false;
+                                    break;
+                                case DialogResult.Abort:
+                                    exportErrorCount++;
+                                    aaPatcher.Fase = PatchFase.Error;
+                                    aaPatcher.ErrorMsg = string.Format(L.ErrorPatchExportFile, pfi.Name);
+                                    break;
+                                case DialogResult.Ignore:
+                                    fileOK = true;
+                                    break;
+                                default:
+                                    break;
+                            }
+                        }
+                    }
+
+                    if (exportErrorCount > 0)
+                    {
+                        aaPatcher.Fase = PatchFase.Error;
+                        aaPatcher.ErrorMsg = string.Format(L.ErrorPatchExportFile, pfi.Name);
+                    }
+                }
+
+                //--------------------------------------
+                // Create/Load Local Hash from game_pak
+                //--------------------------------------
+                if (File.Exists(aaPatcher.localGame_Pak))
+                {
+                    aaPatcher.Fase = PatchFase.CheckLocalFiles;
+                    bgwPatcher.ReportProgress(2, aaPatcher);
+
+                    //pak = new AAPak(aaPatcher.localGame_Pak, false, false);
+                    pak = new AAPak("");
+                    TryLoadCustomKey(pak, aaPatcher.localGame_Pak);
+                    pak.OpenPak(aaPatcher.localGame_Pak, false);
+                    if (!pak.IsOpen)
+                    {
+                        // Failed to open pak
+                        aaPatcher.Fase = PatchFase.Error;
+                        aaPatcher.ErrorMsg = string.Format(L.FailedToOpen, aaPatcher.localGame_Pak);
+                        return;
+                    }
+
+                    // Calculate local file size total
+                    // aaPatcher.FileDownloadSizeTotal = new System.IO.FileInfo(aaPatcher.localGame_Pak).Length;
+                    aaPatcher.FileDownloadSizeTotal = 0;
+                    var totalFilesCount = 0;
+                    foreach (AAPakFileInfo pfi in pak.Files)
+                    {
+                        aaPatcher.FileDownloadSizeTotal += pfi.Size;
+                        totalFilesCount++;
+                    }
+
+                    var filesCount = 0;
+                    foreach (AAPakFileInfo pfi in pak.Files)
+                    {
+                        //if (BitConverter.ToString(pfi.md5).Replace("-", "") == AAPakFileHeader.nullHashString)
+                        if (Array.Equals(pfi.Md5, AAPakFileHeader.NullHash))
+                        {
+                            aaPatcher.Fase = PatchFase.ReHashLocalFiles;
+                            pak.UpdateMd5(pfi);
+                        }
+                        filesCount++;
+                        if ((filesCount % 50) == 0)
+                        {
+                            bgwPatcher.ReportProgress((filesCount * 100 / totalFilesCount), aaPatcher);
+                        }
+                    }
+
+                    if (aaPatcher.Fase == PatchFase.ReHashLocalFiles)
+                        pak.SaveHeader();
+                    System.Threading.Thread.Sleep(250);
+                }
+                else
+                {
+                    // Failed to open pak
+                    aaPatcher.Fase = PatchFase.Error;
+                    aaPatcher.ErrorMsg = string.Format(L.FileNotFound, aaPatcher.localGame_Pak);
+                    return;
+                }
+
+            }
+
+            //-------------------------------------------
+            // Delete all files mentioned in deleted.txt
+            //-------------------------------------------
+            try
+            {
+                var delFile = "deleted.txt";
+                PatchDownloadPak.FileExists(delFile);
+                Stream exportStream = PatchDownloadPak.ExportFileAsStream(delFile);
+                exportStream.Position = 0;
+                List<string> slDelFiles = new List<string>();
+                using (StreamReader reader = new StreamReader(exportStream))
+                {
+                    while (!reader.EndOfStream)
+                    {
+                        var s = reader.ReadLine();
+                        slDelFiles.Add(s);
+                    }
+                }
+                exportStream.Dispose();
+
+                foreach (string s in slDelFiles)
+                {
+                    var delName = s.Replace('/', Path.DirectorySeparatorChar);
+                    if (File.Exists(aaPatcher.localGameFolder + delName))
+                        File.Delete(aaPatcher.localGameFolder + delName);
+                }
+            }
+            catch { }
+
+            System.Threading.Thread.Sleep(250);
+
+            //----------------------------------
+            // All done, back to the login page
+            //----------------------------------
+            aaPatcher.localVersion = aaPatcher.remoteVersion;
+            aaPatcher.Fase = PatchFase.Done;
+            aaPatcher.DoneMsg = L.PatchComplete;
+            bgwPatcher.ReportProgress(100, aaPatcher);
+            System.Threading.Thread.Sleep(1500);
+        }
+
+        private void bgwClient_ProgressChanged(object sender, ProgressChangedEventArgs e)
+        {
+            AAPatchProgress p = e.UserState as AAPatchProgress;
+            switch (p.Fase)
+            {
+                case PatchFase.Init:
+                    lPatchProgressBarText.Text = L.CheckVersion;
+                    rbInit.Checked = true;
+                    break;
+                case PatchFase.DownloadVerFile:
+                    rbDownloadVerFile.Checked = true;
+                    break;
+                case PatchFase.CompareVersion:
+                    rbComparingVersion.Checked = true;
+                    break;
+                case PatchFase.CheckLocalFiles:
+                    lPatchProgressBarText.Text = L.CheckLocalFiles;
+                    rbCheckLocalFiles.Checked = true;
+                    break;
+                case PatchFase.ReHashLocalFiles:
+                    lPatchProgressBarText.Text = L.Game_PakNeedsUpdate;
+                    rbReHashLocalFiles.Checked = true;
+                    break;
+                case PatchFase.DownloadPatchFilesInfo:
+                    rbDownloadPatchFilesInfo.Checked = true;
+                    break;
+                case PatchFase.CalculateDownloads:
+                    lPatchProgressBarText.Text = L.CheckVersion + " -> " + aaPatcher.remoteVersion;
+                    rbCalculateDownloads.Checked = true;
+                    break;
+                case PatchFase.DownloadFiles:
+                    lPatchProgressBarText.Text = L.DownloadPatch;
+                    rbDownloadFiles.Text = string.Format(L.DownloadSizeAndFiles, (aaPatcher.FileDownloadSizeTotal / 1024 / 1024).ToString(), installFile.Count.ToString());
+                    // rbDownloadFiles.Text = "Download " + dlPakFileList.Count.ToString() + " patch files - " + (aaPatcher.FileDownloadSizeTotal / 1024 / 1024).ToString() + " MB";
+                    rbDownloadFiles.Checked = true;
+                    break;
+                case PatchFase.AddFiles:
+                    lPatchProgressBarText.Text = L.ApplyPatch;
+                    rbAddFiles.Checked = true;
+                    break;
+                case PatchFase.Done:
+                    lPatchProgressBarText.Text = L.PatchComplete;
+                    rbDone.Checked = true;
+                    break;
+            }
+            UpdateProgressBarTotal(e.ProgressPercentage, 100);
+        }
+
+        private void bgwClient_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
+        {
+            // Client Finished
+            // Revert server status to unknown, and do some cleaning
+
+            if (aaPatcher.Fase == PatchFase.Error)
+            {
+                MessageBox.Show(aaPatcher.ErrorMsg, "ERROR", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+
+            if (aaPatcher.Fase == PatchFase.Done)
+            {
+                try
+                {
+                    // auto detect 
+                }
+                catch (Exception x)
+                {
+                    MessageBox.Show(string.Format(L.ErrorSavingVersionInfo, x.Message));
+                }
+                if (aaPatcher.DoneMsg != "")
+                {
+                    MessageBox.Show(aaPatcher.DoneMsg, L.PatchComplete, MessageBoxButtons.OK, MessageBoxIcon.Information);
+                }
+
+            }
+
+            serverCheckStatus = serverCheck.Unknown;
+            nextServerCheck = 1000;
+            UpdatePlayButton(serverCheckStatus, false);
+            ShowPanelControls(0);
+        }
+        
     }
 }
