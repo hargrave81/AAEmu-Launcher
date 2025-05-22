@@ -268,6 +268,36 @@ namespace AAEmu.Launcher.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
+        internal static System.Drawing.Bitmap ButtonBox {
+            get {
+                object obj = ResourceManager.GetObject("ButtonBox", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap ButtonBoxDisabled {
+            get {
+                object obj = ResourceManager.GetObject("ButtonBoxDisabled", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap ButtonBoxDown {
+            get {
+                object obj = ResourceManager.GetObject("ButtonBoxDown", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
         internal static System.Drawing.Bitmap Discord_Logo {
             get {
                 object obj = ResourceManager.GetObject("Discord_Logo", resourceCulture);
@@ -431,6 +461,26 @@ namespace AAEmu.Launcher.Properties {
         internal static System.Drawing.Bitmap flag_xx {
             get {
                 object obj = ResourceManager.GetObject("flag_xx", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap GearNormal {
+            get {
+                object obj = ResourceManager.GetObject("GearNormal", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap GearTurn {
+            get {
+                object obj = ResourceManager.GetObject("GearTurn", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }

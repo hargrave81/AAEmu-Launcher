@@ -277,4 +277,19 @@
   <data name="flag_se_sv" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Res\flag_se_sv.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
+  <data name="ButtonBox" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\ButtonBox.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="ButtonBoxDisabled" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\ButtonBoxDisabled.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="ButtonBoxDown" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\ButtonBoxDown.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="GearNormal" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\GearNormal.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="GearTurn" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\GearTurn.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
 </root>

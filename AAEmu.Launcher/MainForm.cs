@@ -1,5 +1,6 @@
 ﻿using AAEmu.Launcher.Basic;
 using AAEmu.Launcher.MailRu10;
+using AAEmu.Launcher.Properties;
 using AAEmu.Launcher.Trion12;
 using AAEmu.Launcher.Trion35;
 using AAEmu.Launcher.Trion60;
@@ -478,6 +479,7 @@ namespace AAEmu.Launcher
         // (PakFileInfo, Reason to Add)
         private List<(AAPakFileInfo, string)> dlPakFileList = new List<(AAPakFileInfo, string)>();
         private LauncherOpenMode AppOpenMode = LauncherOpenMode.DefaultConfigFile;
+        private List<Zip7File> installFile = new List<Zip7File>();
 
         // Auto Close
         public int AutoCloseTimer { get; set; } = 0;
@@ -494,18 +496,18 @@ namespace AAEmu.Launcher
         {
             L.Lang = settingsLangEN_US;
             btnLauncherLangChange.Image = Properties.Resources.flag_english;
-            L.Username = "Username";
-            L.Password = "Password";
+            L.Username = "";
+            L.Password = "";
             L.ServerAddress = "Server Address";
             L.PathToGame = "Path to Game";
             L.SaveCredentials = "Save Credentials";
             L.SkipIntro = "Skip Intro";
             L.HideSplashScreen = "Hide Splash Screen";
-            L.SaveSettings = "Save";
+            L.SaveSettings = "";
             L.Cancel = "Cancel";
-            L.Settings = "Settings";
+            L.Settings = "";
             L.Website = "Website";
-            L.Play = "Play";
+            L.Play = "";
             L.Online = "Online";
             L.Offline = "Offline";
             L.Update = "Update!";
@@ -711,15 +713,15 @@ namespace AAEmu.Launcher
             // Gray out this setting if no update url is set
             if ((Setting.ServerGameUpdateURL != null) && (Setting.ServerGameUpdateURL != ""))
             {
-                lAllowUpdates.ForeColor = Color.White;
-                cbAllowUpdates.ForeColor = Color.White;
-                cbAllowUpdates.Cursor = Cursors.Hand;
+                //lAllowUpdates.ForeColor = Color.White;
+                //cbAllowUpdates.ForeColor = Color.White;
+                //cbAllowUpdates.Cursor = Cursors.Hand;
             }
             else
             {
-                lAllowUpdates.ForeColor = Color.Gray;
-                cbAllowUpdates.ForeColor = Color.Gray;
-                cbAllowUpdates.Cursor = Cursors.No;
+                //lAllowUpdates.ForeColor = Color.Gray;
+                //cbAllowUpdates.ForeColor = Color.Gray;
+                //cbAllowUpdates.Cursor = Cursors.No;
             }
 
             // If we don't change this, transparancy effects that aren't on the panels will show wrong because of gray background
@@ -779,16 +781,16 @@ namespace AAEmu.Launcher
 
             lLogin.Text = L.Username;
             lPassword.Text = L.Password;
-            lIPAddress.Text = L.ServerAddress;
-            lPathToGameLabel.Text = L.PathToGame;
-            lSaveUser.Text = L.SaveCredentials;
-            lSkipIntro.Text = L.SkipIntro;
-            lHideSplash.Text = L.HideSplashScreen;
+            //lIPAddress.Text = L.ServerAddress;
+            //lPathToGameLabel.Text = L.PathToGame;
+            //lSaveUser.Text = L.SaveCredentials;
+            //lSkipIntro.Text = L.SkipIntro;
+            //lHideSplash.Text = L.HideSplashScreen;
             lSettingsBack.Text = L.SaveSettings;
             btnSettings.Text = L.Settings;
             btnWebsite.Text = L.Website;
-            lUpdateLocale.Text = L.UpdateLocale;
-            lAllowUpdates.Text = L.AllowUpdates;
+            //lUpdateLocale.Text = L.UpdateLocale;
+            //lAllowUpdates.Text = L.AllowUpdates;
             //minimizeToolStripMenuItem.Text = L.Minimize;
             //closeToolStripMenuItem.Text = L.CloseProgram;
 
@@ -1096,7 +1098,14 @@ namespace AAEmu.Launcher
             if ((Setting.PathToGame == null) || (Setting.PathToGame == "") || !File.Exists(Setting.PathToGame))
             {
                 Setting.PathToGame = "";
-                TryAutoFindGameExe();
+                bool gameFound = TryAutoFindGameExe();
+                if(!gameFound)
+                {
+                    serverCheckStatus = serverCheck.Updating;
+                    ShowPanelControls(ShowPanelType.UpdatePatch); // Swap to download layout
+                    UpdatePlayButton(serverCheckStatus, false);
+                    bgwClient.RunWorkerAsync(); // start patch process
+                }
             }
 
             if ((Setting.PathToGame == "") || (!File.Exists(Setting.PathToGame)) || IsInDefaultLocation(Setting.PathToGame))
@@ -1228,7 +1237,7 @@ namespace AAEmu.Launcher
             SetCustomCheckBox(cbSkipIntro, Setting.SkipIntro);
             SetCustomCheckBox(cbHideSplash, Setting.HideSplashLogo);
             SetCustomCheckBox(cbUpdateLocale, Setting.UpdateLocale);
-            SetCustomCheckBox(cbAllowUpdates, Setting.AllowGameUpdates);
+            //SetCustomCheckBox(cbAllowUpdates, Setting.AllowGameUpdates);
         }
 
         private bool LoadSettingsFromStream(Stream aStream, string configFileName, string defaultHost = "127.0.0.1")
@@ -2007,12 +2016,12 @@ namespace AAEmu.Launcher
         {
             if ((Setting.ServerGameUpdateURL != null) && (Setting.ServerGameUpdateURL != ""))
             {
-                Setting.AllowGameUpdates = ToggleSettingCheckBox(cbAllowUpdates, Setting.AllowGameUpdates);
+                //Setting.AllowGameUpdates = ToggleSettingCheckBox(cbAllowUpdates, Setting.AllowGameUpdates);
             }
             else
             {
                 Setting.AllowGameUpdates = false;
-                SetCustomCheckBox(cbAllowUpdates, Setting.AllowGameUpdates);
+                //SetCustomCheckBox(cbAllowUpdates, Setting.AllowGameUpdates);
             }
         }
 
@@ -2072,7 +2081,7 @@ namespace AAEmu.Launcher
             return "";
         }
 
-        private void TryAutoFindGameExe()
+        private bool TryAutoFindGameExe()
         {
             Application.UseWaitCursor = true;
 
@@ -2087,7 +2096,7 @@ namespace AAEmu.Launcher
                     Setting.PathToGame = exeFile;
                     lGamePath.Text = Setting.PathToGame;
                     Application.UseWaitCursor = false;
-                    return;
+                    return true;
                 }
             }
 
@@ -2124,9 +2133,14 @@ namespace AAEmu.Launcher
             catch
             {
                 // actually do nothing with this, user doesn't need to know
-            }
+            }            
             pb1.Visible = false;
             Application.UseWaitCursor = false;
+            if (!string.IsNullOrEmpty(Setting.PathToGame))
+            {
+                return true;
+            }
+            return false;
         }
 
         private void UpdatePlayButton(serverCheck serverState, bool isMouseOver)
@@ -2137,24 +2151,24 @@ namespace AAEmu.Launcher
                 switch (serverState)
                 {
                     case serverCheck.Offline: // offline
-                        btnPlay.Image = Properties.Resources.btn_red;
+                        btnPlay.Image = Properties.Resources.ButtonBoxDisabled;
                         btnPlay.Text = L.Offline;
                         break;
                     case serverCheck.Online: // Play
-                        btnPlay.Image = Properties.Resources.btn_green_a;
+                        btnPlay.Image = Properties.Resources.ButtonBoxDown;
                         btnPlay.Text = L.Play;
                         break;
                     case serverCheck.Update: // Update
-                        btnPlay.Image = Properties.Resources.btn_green;
+                        btnPlay.Image = Properties.Resources.ButtonBoxDown;
                         btnPlay.Text = L.Update;
                         break;
                     case serverCheck.Updating: // Updating
-                        btnPlay.Image = Properties.Resources.btn_red;
+                        btnPlay.Image = Properties.Resources.ButtonBoxDisabled;
                         btnPlay.Text = L.Updating;
                         break;
                     case serverCheck.Unknown: // Play
                     default:
-                        btnPlay.Image = Properties.Resources.btn_green;
+                        btnPlay.Image = Properties.Resources.ButtonBoxDown;
                         btnPlay.Text = L.Play;
                         break;
                 }
@@ -2164,24 +2178,24 @@ namespace AAEmu.Launcher
                 switch (serverState)
                 {
                     case serverCheck.Offline: // offline
-                        btnPlay.Image = Properties.Resources.btn_red;
+                        btnPlay.Image = Properties.Resources.ButtonBoxDisabled;
                         btnPlay.Text = L.Offline;
                         break;
                     case serverCheck.Online:
-                        btnPlay.Image = Properties.Resources.btn_green;
+                        btnPlay.Image = Properties.Resources.ButtonBox;
                         btnPlay.Text = L.Play;
                         break;
                     case serverCheck.Update: // Update
-                        btnPlay.Image = Properties.Resources.btn_green_d;
+                        btnPlay.Image = Properties.Resources.ButtonBox;
                         btnPlay.Text = L.Update;
                         break;
                     case serverCheck.Updating: // Updating
-                        btnPlay.Image = Properties.Resources.btn_red;
+                        btnPlay.Image = Properties.Resources.ButtonBoxDisabled;
                         btnPlay.Text = L.Updating;
                         break;
                     case serverCheck.Unknown:
                     default:
-                        btnPlay.Image = Properties.Resources.btn_green_d;
+                        btnPlay.Image = Properties.Resources.ButtonBox;
                         btnPlay.Text = L.Play;
                         break;
                 }

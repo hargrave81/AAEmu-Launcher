@@ -15,7 +15,7 @@
     <NuGetPackageImportStamp>
     </NuGetPackageImportStamp>
     <TargetFrameworkProfile />
-    <PublishUrl>D:\Dev\GitHub\ZeromusXYZ\AAEmu-Launcher\.publish\AAEmu.Launcher\</PublishUrl>
+    <PublishUrl>publish\</PublishUrl>
     <Install>true</Install>
     <InstallFrom>Disk</InstallFrom>
     <UpdateEnabled>false</UpdateEnabled>
@@ -29,11 +29,11 @@
     <ProductName>AAEmu Launcher</ProductName>
     <PublisherName>ZeromusXYZ</PublisherName>
     <SuiteName>AAEmu Launcher</SuiteName>
-    <ApplicationRevision>5</ApplicationRevision>
-    <ApplicationVersion>0.5.6.%2a</ApplicationVersion>
+    <AutorunEnabled>true</AutorunEnabled>
+    <ApplicationRevision>8</ApplicationRevision>
+    <ApplicationVersion>0.10.0.%2a</ApplicationVersion>
     <UseApplicationTrust>false</UseApplicationTrust>
     <CreateDesktopShortcut>true</CreateDesktopShortcut>
-    <PublishWizardCompleted>true</PublishWizardCompleted>
     <BootstrapperEnabled>true</BootstrapperEnabled>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
@@ -59,7 +59,7 @@
     <StartupObject>AAEmu.Launcher.Program</StartupObject>
   </PropertyGroup>
   <PropertyGroup>
-    <ApplicationIcon>aaemu.ico</ApplicationIcon>
+    <ApplicationIcon>aalogo_p05_icon.ico</ApplicationIcon>
   </PropertyGroup>
   <PropertyGroup>
     <ManifestCertificateThumbprint>37D977E1C3B994E1C59520BA3E952922E469FEAF</ManifestCertificateThumbprint>
@@ -68,7 +68,7 @@
     <ManifestKeyFile>AAEmu.Launcher_TemporaryKey.pfx</ManifestKeyFile>
   </PropertyGroup>
   <PropertyGroup>
-    <GenerateManifests>true</GenerateManifests>
+    <GenerateManifests>false</GenerateManifests>
   </PropertyGroup>
   <PropertyGroup>
     <TargetZone>LocalIntranet</TargetZone>
@@ -82,6 +82,9 @@
   <ItemGroup>
     <Reference Include="AAPacker, Version=1.1.2.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\AAPacker.1.1.2\lib\net48\AAPacker.dll</HintPath>
+    </Reference>
+    <Reference Include="FluentFTP, Version=50.0.1.0, Culture=neutral, PublicKeyToken=f4af092b1d8df44f, processorArchitecture=MSIL">
+      <HintPath>..\packages\FluentFTP.50.0.1\lib\net472\FluentFTP.dll</HintPath>
     </Reference>
     <Reference Include="Newtonsoft.Json, Version=13.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
       <HintPath>..\packages\Newtonsoft.Json.13.0.3\lib\net45\Newtonsoft.Json.dll</HintPath>
@@ -166,6 +169,7 @@
     <Compile Include="URIGenForm.Designer.cs">
       <DependentUpon>URIGenForm.cs</DependentUpon>
     </Compile>
+    <Compile Include="Zip7File.cs" />
     <EmbeddedResource Include="DebugHelperForm.resx">
       <DependentUpon>DebugHelperForm.cs</DependentUpon>
     </EmbeddedResource>
@@ -255,6 +259,12 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="aaemu.ico" />
+    <Content Include="aalogo_p05_icon.ico" />
+    <None Include="Resources\GearNormal.png" />
+    <None Include="Resources\GearTurn.png" />
+    <None Include="Resources\ButtonBoxDisabled.png" />
+    <None Include="Resources\ButtonBox.png" />
+    <None Include="Resources\ButtonBoxDown.png" />
     <None Include="Res\flag_se_sv.png" />
     <None Include="lng\se_sv.lng">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
@@ -307,7 +317,7 @@
   <ItemGroup>
     <BootstrapperPackage Include=".NETFramework,Version=v4.6.1">
       <Visible>False</Visible>
-      <ProductName>Microsoft .NET Framework 4.6.1 %28x86 和 x64%29</ProductName>
+      <ProductName>Microsoft .NET Framework 4.6.1 %28x86 and x64%29</ProductName>
       <Install>true</Install>
     </BootstrapperPackage>
     <BootstrapperPackage Include="Microsoft.Net.Framework.3.5.SP1">

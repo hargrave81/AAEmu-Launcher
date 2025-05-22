@@ -31,7 +31,9 @@
             this.components = new System.ComponentModel.Container();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(LauncherForm));
             this.panelLoginAndPatch = new System.Windows.Forms.Panel();
+            this.bntRegister = new System.Windows.Forms.Label();
             this.pPatchSteps = new System.Windows.Forms.Panel();
+            this.lNewsFeed = new System.Windows.Forms.Label();
             this.rbDownloadFiles = new System.Windows.Forms.RadioButton();
             this.rbInit = new System.Windows.Forms.RadioButton();
             this.rbDone = new System.Windows.Forms.RadioButton();
@@ -51,16 +53,14 @@
             this.cbLoginList = new System.Windows.Forms.ComboBox();
             this.ePassword = new System.Windows.Forms.TextBox();
             this.wbNews = new System.Windows.Forms.WebBrowser();
-            this.lNewsFeed = new System.Windows.Forms.Label();
-            this.btnSettings = new System.Windows.Forms.Label();
             this.btnWebsite = new System.Windows.Forms.Label();
             this.btnPlay = new System.Windows.Forms.Label();
             this.lPassword = new System.Windows.Forms.Label();
             this.lLogin = new System.Windows.Forms.Label();
+            this.btnSettings = new System.Windows.Forms.Label();
             this.pb1 = new System.Windows.Forms.ProgressBar();
             this.timerGeneral = new System.Windows.Forms.Timer(this.components);
             this.eServerIP = new System.Windows.Forms.TextBox();
-            this.lPathToGameLabel = new System.Windows.Forms.Label();
             this.lAppVersion = new System.Windows.Forms.Label();
             this.cmsAAEmuButton = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.troubleshootGameToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -79,19 +79,12 @@
             this.generateServerURILinkToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.debugModeToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.lSettingsBack = new System.Windows.Forms.Label();
-            this.lIPAddress = new System.Windows.Forms.Label();
             this.lGamePath = new System.Windows.Forms.Label();
-            this.lHideSplash = new System.Windows.Forms.Label();
             this.cbHideSplash = new System.Windows.Forms.Label();
             this.cbSkipIntro = new System.Windows.Forms.Label();
-            this.lSkipIntro = new System.Windows.Forms.Label();
             this.cbSaveUser = new System.Windows.Forms.Label();
-            this.lSaveUser = new System.Windows.Forms.Label();
             this.lGameClientType = new System.Windows.Forms.Label();
             this.cbUpdateLocale = new System.Windows.Forms.Label();
-            this.lUpdateLocale = new System.Windows.Forms.Label();
-            this.cbAllowUpdates = new System.Windows.Forms.Label();
-            this.lAllowUpdates = new System.Windows.Forms.Label();
             this.cmsGitHub = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.aAEmuLauncherToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.aAEmuServerToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -124,6 +117,7 @@
             this.btnGithub = new System.Windows.Forms.PictureBox();
             this.btnLauncherLangChange = new System.Windows.Forms.PictureBox();
             this.panelSettings = new System.Windows.Forms.Panel();
+            this.ISettingsCancel = new System.Windows.Forms.Label();
             this.bgwNewsFeed = new System.ComponentModel.BackgroundWorker();
             this.bgwServerStatusCheck = new System.ComponentModel.BackgroundWorker();
             this.bgwPatcher = new System.ComponentModel.BackgroundWorker();
@@ -139,6 +133,7 @@
             this.btnMinimize = new System.Windows.Forms.PictureBox();
             this.ttLocale = new System.Windows.Forms.ToolTip(this.components);
             this.clearPatchCacheToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.bgwClient = new System.ComponentModel.BackgroundWorker();
             this.panelLoginAndPatch.SuspendLayout();
             this.pPatchSteps.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pgbFrontTotal)).BeginInit();
@@ -165,6 +160,7 @@
             this.panelLoginAndPatch.BackColor = System.Drawing.Color.Transparent;
             this.panelLoginAndPatch.BackgroundImage = global::AAEmu.Launcher.Properties.Resources.bg_login;
             this.panelLoginAndPatch.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Center;
+            this.panelLoginAndPatch.Controls.Add(this.bntRegister);
             this.panelLoginAndPatch.Controls.Add(this.pPatchSteps);
             this.panelLoginAndPatch.Controls.Add(this.lPatchProgressBarText);
             this.panelLoginAndPatch.Controls.Add(this.pgbFrontTotal);
@@ -175,22 +171,36 @@
             this.panelLoginAndPatch.Controls.Add(this.cbLoginList);
             this.panelLoginAndPatch.Controls.Add(this.ePassword);
             this.panelLoginAndPatch.Controls.Add(this.wbNews);
-            this.panelLoginAndPatch.Controls.Add(this.lNewsFeed);
-            this.panelLoginAndPatch.Controls.Add(this.btnSettings);
             this.panelLoginAndPatch.Controls.Add(this.btnWebsite);
             this.panelLoginAndPatch.Controls.Add(this.btnPlay);
             this.panelLoginAndPatch.Controls.Add(this.lPassword);
             this.panelLoginAndPatch.Controls.Add(this.lLogin);
-            this.panelLoginAndPatch.Location = new System.Drawing.Point(17, 63);
+            this.panelLoginAndPatch.Location = new System.Drawing.Point(7, 49);
             this.panelLoginAndPatch.Name = "panelLoginAndPatch";
-            this.panelLoginAndPatch.Size = new System.Drawing.Size(376, 162);
+            this.panelLoginAndPatch.Size = new System.Drawing.Size(406, 181);
             this.panelLoginAndPatch.TabIndex = 50;
             this.panelLoginAndPatch.MouseDown += new System.Windows.Forms.MouseEventHandler(this.LauncherForm_MouseDown);
             this.panelLoginAndPatch.MouseMove += new System.Windows.Forms.MouseEventHandler(this.LauncherForm_MouseMove);
             this.panelLoginAndPatch.MouseUp += new System.Windows.Forms.MouseEventHandler(this.LauncherForm_MouseUp);
             // 
+            // bntRegister
+            // 
+            this.bntRegister.BackColor = System.Drawing.Color.Transparent;
+            this.bntRegister.Cursor = System.Windows.Forms.Cursors.Hand;
+            this.bntRegister.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.bntRegister.Font = new System.Drawing.Font("Georgia", 24F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.bntRegister.ForeColor = System.Drawing.Color.White;
+            this.bntRegister.Image = global::AAEmu.Launcher.Properties.Resources.ButtonBox;
+            this.bntRegister.Location = new System.Drawing.Point(647, 382);
+            this.bntRegister.Name = "bntRegister";
+            this.bntRegister.Size = new System.Drawing.Size(122, 47);
+            this.bntRegister.TabIndex = 55;
+            this.bntRegister.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            this.bntRegister.Click += new System.EventHandler(this.bntRegister_Click);
+            // 
             // pPatchSteps
             // 
+            this.pPatchSteps.Controls.Add(this.lNewsFeed);
             this.pPatchSteps.Controls.Add(this.rbDownloadFiles);
             this.pPatchSteps.Controls.Add(this.rbInit);
             this.pPatchSteps.Controls.Add(this.rbDone);
@@ -205,6 +215,20 @@
             this.pPatchSteps.Name = "pPatchSteps";
             this.pPatchSteps.Size = new System.Drawing.Size(361, 210);
             this.pPatchSteps.TabIndex = 52;
+            // 
+            // lNewsFeed
+            // 
+            this.lNewsFeed.BackColor = System.Drawing.Color.Transparent;
+            this.lNewsFeed.Font = new System.Drawing.Font("Flareserif821 BT", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lNewsFeed.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(128)))), ((int)(((byte)(64)))), ((int)(((byte)(0)))));
+            this.lNewsFeed.Location = new System.Drawing.Point(5, -1);
+            this.lNewsFeed.Margin = new System.Windows.Forms.Padding(0);
+            this.lNewsFeed.Name = "lNewsFeed";
+            this.lNewsFeed.Size = new System.Drawing.Size(555, 320);
+            this.lNewsFeed.TabIndex = 24;
+            this.lNewsFeed.Text = "Launcher News\r\n\r\n\r\nUpdated the links to\r\nAAEmu project\r\n\r\nChanged the URI format\r" +
+    "\nfor launching from website\r\n";
+            this.lNewsFeed.TextAlign = System.Drawing.ContentAlignment.TopCenter;
             // 
             // rbDownloadFiles
             // 
@@ -340,7 +364,7 @@
             // 
             this.pgbFrontTotal.BackColor = System.Drawing.Color.Transparent;
             this.pgbFrontTotal.Image = global::AAEmu.Launcher.Properties.Resources.pgbar_front;
-            this.pgbFrontTotal.Location = new System.Drawing.Point(36, 360);
+            this.pgbFrontTotal.Location = new System.Drawing.Point(36, 359);
             this.pgbFrontTotal.Name = "pgbFrontTotal";
             this.pgbFrontTotal.Size = new System.Drawing.Size(500, 70);
             this.pgbFrontTotal.TabIndex = 53;
@@ -350,7 +374,7 @@
             // 
             this.pgbBackTotal.BackColor = System.Drawing.Color.Transparent;
             this.pgbBackTotal.Image = global::AAEmu.Launcher.Properties.Resources.pgbar_back;
-            this.pgbBackTotal.Location = new System.Drawing.Point(36, 360);
+            this.pgbBackTotal.Location = new System.Drawing.Point(36, 359);
             this.pgbBackTotal.Name = "pgbBackTotal";
             this.pgbBackTotal.Size = new System.Drawing.Size(500, 70);
             this.pgbBackTotal.SizeMode = System.Windows.Forms.PictureBoxSizeMode.AutoSize;
@@ -386,16 +410,15 @@
             // 
             // eLogin
             // 
-            this.eLogin.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(60)))), ((int)(((byte)(45)))), ((int)(((byte)(65)))));
+            this.eLogin.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(230)))), ((int)(((byte)(219)))), ((int)(((byte)(194)))));
             this.eLogin.BorderStyle = System.Windows.Forms.BorderStyle.None;
-            this.eLogin.Font = new System.Drawing.Font("Georgia", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.eLogin.ForeColor = System.Drawing.Color.White;
-            this.eLogin.Location = new System.Drawing.Point(58, 398);
+            this.eLogin.Font = new System.Drawing.Font("Flareserif821 BT", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.eLogin.ForeColor = System.Drawing.Color.Black;
+            this.eLogin.Location = new System.Drawing.Point(678, 212);
             this.eLogin.Name = "eLogin";
-            this.eLogin.Size = new System.Drawing.Size(210, 22);
+            this.eLogin.Size = new System.Drawing.Size(218, 24);
             this.eLogin.TabIndex = 1;
             this.eLogin.Text = "test";
-            this.eLogin.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
             this.eLogin.WordWrap = false;
             this.eLogin.KeyUp += new System.Windows.Forms.KeyEventHandler(this.txtLogin_KeyUp);
             // 
@@ -409,7 +432,7 @@
             this.cbLoginList.ForeColor = System.Drawing.Color.White;
             this.cbLoginList.FormattingEnabled = true;
             this.cbLoginList.IntegralHeight = false;
-            this.cbLoginList.Location = new System.Drawing.Point(39, 397);
+            this.cbLoginList.Location = new System.Drawing.Point(654, 212);
             this.cbLoginList.Name = "cbLoginList";
             this.cbLoginList.Size = new System.Drawing.Size(18, 24);
             this.cbLoginList.TabIndex = 15;
@@ -419,16 +442,15 @@
             // 
             // ePassword
             // 
-            this.ePassword.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(60)))), ((int)(((byte)(45)))), ((int)(((byte)(65)))));
+            this.ePassword.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(230)))), ((int)(((byte)(219)))), ((int)(((byte)(194)))));
             this.ePassword.BorderStyle = System.Windows.Forms.BorderStyle.None;
-            this.ePassword.Font = new System.Drawing.Font("Georgia", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.ePassword.ForeColor = System.Drawing.Color.White;
-            this.ePassword.Location = new System.Drawing.Point(303, 396);
+            this.ePassword.Font = new System.Drawing.Font("Flareserif821 BT", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.ePassword.ForeColor = System.Drawing.Color.Black;
+            this.ePassword.Location = new System.Drawing.Point(661, 304);
             this.ePassword.Name = "ePassword";
             this.ePassword.PasswordChar = '●';
-            this.ePassword.Size = new System.Drawing.Size(227, 22);
+            this.ePassword.Size = new System.Drawing.Size(235, 24);
             this.ePassword.TabIndex = 2;
-            this.ePassword.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
             this.ePassword.UseSystemPasswordChar = true;
             this.ePassword.WordWrap = false;
             this.ePassword.KeyUp += new System.Windows.Forms.KeyEventHandler(this.txtPassword_KeyUp);
@@ -436,45 +458,15 @@
             // wbNews
             // 
             this.wbNews.IsWebBrowserContextMenuEnabled = false;
-            this.wbNews.Location = new System.Drawing.Point(685, 122);
+            this.wbNews.Location = new System.Drawing.Point(47, 92);
             this.wbNews.Margin = new System.Windows.Forms.Padding(0);
             this.wbNews.MinimumSize = new System.Drawing.Size(20, 20);
             this.wbNews.Name = "wbNews";
-            this.wbNews.Size = new System.Drawing.Size(201, 183);
+            this.wbNews.Size = new System.Drawing.Size(552, 337);
             this.wbNews.TabIndex = 48;
             this.wbNews.Visible = false;
             this.wbNews.WebBrowserShortcutsEnabled = false;
             this.wbNews.DocumentCompleted += new System.Windows.Forms.WebBrowserDocumentCompletedEventHandler(this.wbNews_DocumentCompleted);
-            // 
-            // lNewsFeed
-            // 
-            this.lNewsFeed.BackColor = System.Drawing.Color.Transparent;
-            this.lNewsFeed.Font = new System.Drawing.Font("Georgia", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lNewsFeed.ForeColor = System.Drawing.Color.White;
-            this.lNewsFeed.Image = global::AAEmu.Launcher.Properties.Resources.bg_newsfeed;
-            this.lNewsFeed.Location = new System.Drawing.Point(685, 85);
-            this.lNewsFeed.Margin = new System.Windows.Forms.Padding(0);
-            this.lNewsFeed.Name = "lNewsFeed";
-            this.lNewsFeed.Size = new System.Drawing.Size(201, 263);
-            this.lNewsFeed.TabIndex = 24;
-            this.lNewsFeed.Text = "Launcher News\r\n\r\n\r\nUpdated the links to\r\nAAEmu project\r\n\r\nChanged the URI format\r" +
-    "\nfor launching from website\r\n";
-            this.lNewsFeed.TextAlign = System.Drawing.ContentAlignment.TopCenter;
-            // 
-            // btnSettings
-            // 
-            this.btnSettings.BackColor = System.Drawing.Color.Transparent;
-            this.btnSettings.Cursor = System.Windows.Forms.Cursors.Hand;
-            this.btnSettings.Font = new System.Drawing.Font("Georgia", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.btnSettings.ForeColor = System.Drawing.Color.White;
-            this.btnSettings.Image = global::AAEmu.Launcher.Properties.Resources.btn_red_small;
-            this.btnSettings.Location = new System.Drawing.Point(687, 350);
-            this.btnSettings.Name = "btnSettings";
-            this.btnSettings.Size = new System.Drawing.Size(88, 26);
-            this.btnSettings.TabIndex = 25;
-            this.btnSettings.Text = "Settings";
-            this.btnSettings.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
-            this.btnSettings.Click += new System.EventHandler(this.btnSettings_Click);
             // 
             // btnWebsite
             // 
@@ -489,6 +481,7 @@
             this.btnWebsite.TabIndex = 26;
             this.btnWebsite.Text = "Website";
             this.btnWebsite.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            this.btnWebsite.Visible = false;
             this.btnWebsite.Click += new System.EventHandler(this.btnWebsite_Click);
             // 
             // btnPlay
@@ -498,12 +491,11 @@
             this.btnPlay.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.btnPlay.Font = new System.Drawing.Font("Georgia", 24F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.btnPlay.ForeColor = System.Drawing.Color.White;
-            this.btnPlay.Image = global::AAEmu.Launcher.Properties.Resources.btn_green_d;
-            this.btnPlay.Location = new System.Drawing.Point(679, 373);
+            this.btnPlay.Image = global::AAEmu.Launcher.Properties.Resources.ButtonBox;
+            this.btnPlay.Location = new System.Drawing.Point(778, 381);
             this.btnPlay.Name = "btnPlay";
-            this.btnPlay.Size = new System.Drawing.Size(227, 67);
+            this.btnPlay.Size = new System.Drawing.Size(122, 47);
             this.btnPlay.TabIndex = 23;
-            this.btnPlay.Text = "Play";
             this.btnPlay.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             this.btnPlay.Click += new System.EventHandler(this.btnPlay_Click);
             this.btnPlay.MouseEnter += new System.EventHandler(this.btnPlay_MouseEnter);
@@ -520,6 +512,7 @@
             this.lPassword.TabIndex = 19;
             this.lPassword.Text = "Password";
             this.lPassword.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            this.lPassword.Visible = false;
             // 
             // lLogin
             // 
@@ -532,6 +525,24 @@
             this.lLogin.TabIndex = 18;
             this.lLogin.Text = "Username";
             this.lLogin.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            this.lLogin.Visible = false;
+            // 
+            // btnSettings
+            // 
+            this.btnSettings.BackColor = System.Drawing.Color.Transparent;
+            this.btnSettings.Cursor = System.Windows.Forms.Cursors.Hand;
+            this.btnSettings.Font = new System.Drawing.Font("Georgia", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.btnSettings.ForeColor = System.Drawing.Color.White;
+            this.btnSettings.Image = global::AAEmu.Launcher.Properties.Resources.GearNormal;
+            this.btnSettings.Location = new System.Drawing.Point(693, 2);
+            this.btnSettings.Name = "btnSettings";
+            this.btnSettings.Size = new System.Drawing.Size(59, 49);
+            this.btnSettings.TabIndex = 25;
+            this.btnSettings.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            this.ttLocale.SetToolTip(this.btnSettings, "Settings");
+            this.btnSettings.Click += new System.EventHandler(this.btnSettings_Click);
+            this.btnSettings.MouseEnter += new System.EventHandler(this.btnSettings_MouseEnter);
+            this.btnSettings.MouseLeave += new System.EventHandler(this.btnSettings_MouseLeave);
             // 
             // pb1
             // 
@@ -549,29 +560,17 @@
             // 
             // eServerIP
             // 
-            this.eServerIP.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(60)))), ((int)(((byte)(45)))), ((int)(((byte)(65)))));
+            this.eServerIP.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(231)))), ((int)(((byte)(220)))), ((int)(((byte)(195)))));
             this.eServerIP.BorderStyle = System.Windows.Forms.BorderStyle.None;
-            this.eServerIP.Font = new System.Drawing.Font("Georgia", 15.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.eServerIP.ForeColor = System.Drawing.Color.White;
-            this.eServerIP.Location = new System.Drawing.Point(25, 172);
+            this.eServerIP.Font = new System.Drawing.Font("Flareserif821 BT", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.eServerIP.ForeColor = System.Drawing.Color.Sienna;
+            this.eServerIP.Location = new System.Drawing.Point(56, 171);
             this.eServerIP.Margin = new System.Windows.Forms.Padding(0);
             this.eServerIP.Name = "eServerIP";
-            this.eServerIP.Size = new System.Drawing.Size(222, 24);
+            this.eServerIP.Size = new System.Drawing.Size(241, 20);
             this.eServerIP.TabIndex = 5;
             this.eServerIP.Text = "127.0.0.1";
             this.eServerIP.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
-            // 
-            // lPathToGameLabel
-            // 
-            this.lPathToGameLabel.BackColor = System.Drawing.Color.Transparent;
-            this.lPathToGameLabel.Font = new System.Drawing.Font("Georgia", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lPathToGameLabel.ForeColor = System.Drawing.Color.White;
-            this.lPathToGameLabel.Location = new System.Drawing.Point(22, 230);
-            this.lPathToGameLabel.Name = "lPathToGameLabel";
-            this.lPathToGameLabel.Size = new System.Drawing.Size(225, 20);
-            this.lPathToGameLabel.TabIndex = 2;
-            this.lPathToGameLabel.Text = "gamepath";
-            this.lPathToGameLabel.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             // 
             // lAppVersion
             // 
@@ -714,54 +713,28 @@
             this.lSettingsBack.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.lSettingsBack.Font = new System.Drawing.Font("Georgia", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.lSettingsBack.ForeColor = System.Drawing.Color.White;
-            this.lSettingsBack.Location = new System.Drawing.Point(15, 355);
+            this.lSettingsBack.Location = new System.Drawing.Point(782, 385);
             this.lSettingsBack.Name = "lSettingsBack";
-            this.lSettingsBack.Size = new System.Drawing.Size(200, 40);
+            this.lSettingsBack.Size = new System.Drawing.Size(115, 40);
             this.lSettingsBack.TabIndex = 29;
-            this.lSettingsBack.Text = "Back";
             this.lSettingsBack.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             this.lSettingsBack.Click += new System.EventHandler(this.lSettingsBack_Click);
-            // 
-            // lIPAddress
-            // 
-            this.lIPAddress.BackColor = System.Drawing.Color.Transparent;
-            this.lIPAddress.Font = new System.Drawing.Font("Georgia", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lIPAddress.ForeColor = System.Drawing.Color.White;
-            this.lIPAddress.Location = new System.Drawing.Point(22, 138);
-            this.lIPAddress.Name = "lIPAddress";
-            this.lIPAddress.Size = new System.Drawing.Size(225, 24);
-            this.lIPAddress.TabIndex = 0;
-            this.lIPAddress.Text = "Server";
-            this.lIPAddress.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             // 
             // lGamePath
             // 
             this.lGamePath.AutoEllipsis = true;
             this.lGamePath.BackColor = System.Drawing.Color.Transparent;
             this.lGamePath.Cursor = System.Windows.Forms.Cursors.Hand;
-            this.lGamePath.Font = new System.Drawing.Font("Georgia", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lGamePath.ForeColor = System.Drawing.Color.White;
-            this.lGamePath.Location = new System.Drawing.Point(24, 265);
+            this.lGamePath.Font = new System.Drawing.Font("Flareserif821 BT", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lGamePath.ForeColor = System.Drawing.Color.Sienna;
+            this.lGamePath.Location = new System.Drawing.Point(58, 252);
             this.lGamePath.Name = "lGamePath";
-            this.lGamePath.Size = new System.Drawing.Size(223, 20);
+            this.lGamePath.Size = new System.Drawing.Size(236, 20);
             this.lGamePath.TabIndex = 30;
             this.lGamePath.Text = "C:\\ArcheAge\\Working\\Bin32\\archeage.exe";
             this.lGamePath.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             this.lGamePath.UseMnemonic = false;
             this.lGamePath.Click += new System.EventHandler(this.lGamePath_Click);
-            // 
-            // lHideSplash
-            // 
-            this.lHideSplash.BackColor = System.Drawing.Color.Transparent;
-            this.lHideSplash.Font = new System.Drawing.Font("Georgia", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lHideSplash.ForeColor = System.Drawing.Color.White;
-            this.lHideSplash.Location = new System.Drawing.Point(300, 240);
-            this.lHideSplash.Name = "lHideSplash";
-            this.lHideSplash.Size = new System.Drawing.Size(145, 30);
-            this.lHideSplash.TabIndex = 31;
-            this.lHideSplash.Text = "Hide Splash";
-            this.lHideSplash.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
-            this.lHideSplash.Click += new System.EventHandler(this.cbHideSplash_Click);
             // 
             // cbHideSplash
             // 
@@ -769,7 +742,7 @@
             this.cbHideSplash.Cursor = System.Windows.Forms.Cursors.Hand;
             this.cbHideSplash.Font = new System.Drawing.Font("Georgia", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.cbHideSplash.ForeColor = System.Drawing.Color.White;
-            this.cbHideSplash.Location = new System.Drawing.Point(450, 240);
+            this.cbHideSplash.Location = new System.Drawing.Point(336, 323);
             this.cbHideSplash.Name = "cbHideSplash";
             this.cbHideSplash.Size = new System.Drawing.Size(31, 24);
             this.cbHideSplash.TabIndex = 32;
@@ -783,7 +756,7 @@
             this.cbSkipIntro.Cursor = System.Windows.Forms.Cursors.Hand;
             this.cbSkipIntro.Font = new System.Drawing.Font("Georgia", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.cbSkipIntro.ForeColor = System.Drawing.Color.White;
-            this.cbSkipIntro.Location = new System.Drawing.Point(450, 290);
+            this.cbSkipIntro.Location = new System.Drawing.Point(336, 400);
             this.cbSkipIntro.Name = "cbSkipIntro";
             this.cbSkipIntro.Size = new System.Drawing.Size(31, 24);
             this.cbSkipIntro.TabIndex = 34;
@@ -791,26 +764,13 @@
             this.cbSkipIntro.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             this.cbSkipIntro.Click += new System.EventHandler(this.cbSkipIntro_Click);
             // 
-            // lSkipIntro
-            // 
-            this.lSkipIntro.BackColor = System.Drawing.Color.Transparent;
-            this.lSkipIntro.Font = new System.Drawing.Font("Georgia", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lSkipIntro.ForeColor = System.Drawing.Color.White;
-            this.lSkipIntro.Location = new System.Drawing.Point(300, 290);
-            this.lSkipIntro.Name = "lSkipIntro";
-            this.lSkipIntro.Size = new System.Drawing.Size(145, 30);
-            this.lSkipIntro.TabIndex = 33;
-            this.lSkipIntro.Text = "Skip Intro";
-            this.lSkipIntro.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
-            this.lSkipIntro.Click += new System.EventHandler(this.cbSkipIntro_Click);
-            // 
             // cbSaveUser
             // 
             this.cbSaveUser.BackColor = System.Drawing.Color.Transparent;
             this.cbSaveUser.Cursor = System.Windows.Forms.Cursors.Hand;
             this.cbSaveUser.Font = new System.Drawing.Font("Georgia", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.cbSaveUser.ForeColor = System.Drawing.Color.White;
-            this.cbSaveUser.Location = new System.Drawing.Point(450, 140);
+            this.cbSaveUser.Location = new System.Drawing.Point(336, 171);
             this.cbSaveUser.Name = "cbSaveUser";
             this.cbSaveUser.Size = new System.Drawing.Size(31, 24);
             this.cbSaveUser.TabIndex = 36;
@@ -818,28 +778,16 @@
             this.cbSaveUser.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             this.cbSaveUser.Click += new System.EventHandler(this.cbSaveUser_Click);
             // 
-            // lSaveUser
-            // 
-            this.lSaveUser.BackColor = System.Drawing.Color.Transparent;
-            this.lSaveUser.Font = new System.Drawing.Font("Georgia", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lSaveUser.ForeColor = System.Drawing.Color.White;
-            this.lSaveUser.Location = new System.Drawing.Point(300, 140);
-            this.lSaveUser.Name = "lSaveUser";
-            this.lSaveUser.Size = new System.Drawing.Size(145, 30);
-            this.lSaveUser.TabIndex = 35;
-            this.lSaveUser.Text = "Save credentials";
-            this.lSaveUser.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
-            this.lSaveUser.Click += new System.EventHandler(this.cbSaveUser_Click);
-            // 
             // lGameClientType
             // 
             this.lGameClientType.AutoSize = true;
             this.lGameClientType.BackColor = System.Drawing.Color.Transparent;
             this.lGameClientType.Cursor = System.Windows.Forms.Cursors.Hand;
-            this.lGameClientType.ForeColor = System.Drawing.Color.White;
-            this.lGameClientType.Location = new System.Drawing.Point(22, 308);
+            this.lGameClientType.Font = new System.Drawing.Font("Flareserif821 BT", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lGameClientType.ForeColor = System.Drawing.Color.Sienna;
+            this.lGameClientType.Location = new System.Drawing.Point(123, 294);
             this.lGameClientType.Name = "lGameClientType";
-            this.lGameClientType.Size = new System.Drawing.Size(104, 18);
+            this.lGameClientType.Size = new System.Drawing.Size(102, 20);
             this.lGameClientType.TabIndex = 39;
             this.lGameClientType.Text = "-Client Type-";
             this.lGameClientType.Click += new System.EventHandler(this.lGameClientType_Click);
@@ -850,53 +798,13 @@
             this.cbUpdateLocale.Cursor = System.Windows.Forms.Cursors.Hand;
             this.cbUpdateLocale.Font = new System.Drawing.Font("Georgia", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.cbUpdateLocale.ForeColor = System.Drawing.Color.White;
-            this.cbUpdateLocale.Location = new System.Drawing.Point(450, 190);
+            this.cbUpdateLocale.Location = new System.Drawing.Point(336, 246);
             this.cbUpdateLocale.Name = "cbUpdateLocale";
             this.cbUpdateLocale.Size = new System.Drawing.Size(31, 24);
             this.cbUpdateLocale.TabIndex = 41;
             this.cbUpdateLocale.Text = "✓";
             this.cbUpdateLocale.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             this.cbUpdateLocale.Click += new System.EventHandler(this.cbUpdateLocale_Click);
-            // 
-            // lUpdateLocale
-            // 
-            this.lUpdateLocale.BackColor = System.Drawing.Color.Transparent;
-            this.lUpdateLocale.Font = new System.Drawing.Font("Georgia", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lUpdateLocale.ForeColor = System.Drawing.Color.White;
-            this.lUpdateLocale.Location = new System.Drawing.Point(300, 190);
-            this.lUpdateLocale.Name = "lUpdateLocale";
-            this.lUpdateLocale.Size = new System.Drawing.Size(145, 30);
-            this.lUpdateLocale.TabIndex = 40;
-            this.lUpdateLocale.Text = "Update Locale";
-            this.lUpdateLocale.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
-            this.lUpdateLocale.Click += new System.EventHandler(this.cbUpdateLocale_Click);
-            // 
-            // cbAllowUpdates
-            // 
-            this.cbAllowUpdates.BackColor = System.Drawing.Color.Transparent;
-            this.cbAllowUpdates.Cursor = System.Windows.Forms.Cursors.Hand;
-            this.cbAllowUpdates.Font = new System.Drawing.Font("Georgia", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.cbAllowUpdates.ForeColor = System.Drawing.Color.Gray;
-            this.cbAllowUpdates.Location = new System.Drawing.Point(450, 340);
-            this.cbAllowUpdates.Name = "cbAllowUpdates";
-            this.cbAllowUpdates.Size = new System.Drawing.Size(31, 24);
-            this.cbAllowUpdates.TabIndex = 44;
-            this.cbAllowUpdates.Text = "✓";
-            this.cbAllowUpdates.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
-            this.cbAllowUpdates.Click += new System.EventHandler(this.cbAllowUpdates_Click);
-            // 
-            // lAllowUpdates
-            // 
-            this.lAllowUpdates.BackColor = System.Drawing.Color.Transparent;
-            this.lAllowUpdates.Font = new System.Drawing.Font("Georgia", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lAllowUpdates.ForeColor = System.Drawing.Color.Gray;
-            this.lAllowUpdates.Location = new System.Drawing.Point(300, 340);
-            this.lAllowUpdates.Name = "lAllowUpdates";
-            this.lAllowUpdates.Size = new System.Drawing.Size(145, 30);
-            this.lAllowUpdates.TabIndex = 43;
-            this.lAllowUpdates.Text = "Allow Updates";
-            this.lAllowUpdates.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
-            this.lAllowUpdates.Click += new System.EventHandler(this.cbAllowUpdates_Click);
             // 
             // cmsGitHub
             // 
@@ -1135,7 +1043,7 @@
             this.btnLocaleLang.BackColor = System.Drawing.Color.Transparent;
             this.btnLocaleLang.Cursor = System.Windows.Forms.Cursors.Hand;
             this.btnLocaleLang.Image = global::AAEmu.Launcher.Properties.Resources.mini_locale_en_us;
-            this.btnLocaleLang.Location = new System.Drawing.Point(487, 200);
+            this.btnLocaleLang.Location = new System.Drawing.Point(392, 253);
             this.btnLocaleLang.Name = "btnLocaleLang";
             this.btnLocaleLang.Size = new System.Drawing.Size(16, 11);
             this.btnLocaleLang.SizeMode = System.Windows.Forms.PictureBoxSizeMode.AutoSize;
@@ -1155,6 +1063,7 @@
             this.btnSystem.Size = new System.Drawing.Size(40, 40);
             this.btnSystem.TabIndex = 28;
             this.btnSystem.TabStop = false;
+            this.ttLocale.SetToolTip(this.btnSystem, "Support");
             this.btnSystem.Click += new System.EventHandler(this.btnSystem_Click);
             this.btnSystem.DoubleClick += new System.EventHandler(this.btnSystem_DoubleClick);
             this.btnSystem.MouseEnter += new System.EventHandler(this.btnSystem_MouseEnter);
@@ -1198,6 +1107,8 @@
             this.btnLauncherLangChange.Size = new System.Drawing.Size(40, 40);
             this.btnLauncherLangChange.TabIndex = 8;
             this.btnLauncherLangChange.TabStop = false;
+            this.ttLocale.SetToolTip(this.btnLauncherLangChange, "Language");
+            this.btnLauncherLangChange.Visible = false;
             this.btnLauncherLangChange.Click += new System.EventHandler(this.btnLauncherLangChange_Click);
             // 
             // panelSettings
@@ -1205,30 +1116,37 @@
             this.panelSettings.BackColor = System.Drawing.Color.Transparent;
             this.panelSettings.BackgroundImage = global::AAEmu.Launcher.Properties.Resources.bg_setup;
             this.panelSettings.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Center;
-            this.panelSettings.Controls.Add(this.lIPAddress);
+            this.panelSettings.Controls.Add(this.ISettingsCancel);
             this.panelSettings.Controls.Add(this.eServerIP);
-            this.panelSettings.Controls.Add(this.lPathToGameLabel);
             this.panelSettings.Controls.Add(this.lGamePath);
             this.panelSettings.Controls.Add(this.lGameClientType);
             this.panelSettings.Controls.Add(this.btnLocaleLang);
-            this.panelSettings.Controls.Add(this.cbAllowUpdates);
             this.panelSettings.Controls.Add(this.lSettingsBack);
-            this.panelSettings.Controls.Add(this.lAllowUpdates);
-            this.panelSettings.Controls.Add(this.lSaveUser);
             this.panelSettings.Controls.Add(this.cbSkipIntro);
             this.panelSettings.Controls.Add(this.cbSaveUser);
-            this.panelSettings.Controls.Add(this.lSkipIntro);
-            this.panelSettings.Controls.Add(this.lUpdateLocale);
             this.panelSettings.Controls.Add(this.cbHideSplash);
             this.panelSettings.Controls.Add(this.cbUpdateLocale);
-            this.panelSettings.Controls.Add(this.lHideSplash);
-            this.panelSettings.Location = new System.Drawing.Point(17, 239);
+            this.panelSettings.Location = new System.Drawing.Point(9, 245);
             this.panelSettings.Name = "panelSettings";
-            this.panelSettings.Size = new System.Drawing.Size(376, 226);
+            this.panelSettings.Size = new System.Drawing.Size(408, 203);
             this.panelSettings.TabIndex = 51;
             this.panelSettings.MouseDown += new System.Windows.Forms.MouseEventHandler(this.LauncherForm_MouseDown);
             this.panelSettings.MouseMove += new System.Windows.Forms.MouseEventHandler(this.LauncherForm_MouseMove);
             this.panelSettings.MouseUp += new System.Windows.Forms.MouseEventHandler(this.LauncherForm_MouseUp);
+            // 
+            // ISettingsCancel
+            // 
+            this.ISettingsCancel.BackColor = System.Drawing.Color.Transparent;
+            this.ISettingsCancel.Cursor = System.Windows.Forms.Cursors.Hand;
+            this.ISettingsCancel.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.ISettingsCancel.Font = new System.Drawing.Font("Georgia", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.ISettingsCancel.ForeColor = System.Drawing.Color.White;
+            this.ISettingsCancel.Location = new System.Drawing.Point(651, 385);
+            this.ISettingsCancel.Name = "ISettingsCancel";
+            this.ISettingsCancel.Size = new System.Drawing.Size(115, 40);
+            this.ISettingsCancel.TabIndex = 48;
+            this.ISettingsCancel.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            this.ISettingsCancel.Click += new System.EventHandler(this.ISettingsCancel_Click);
             // 
             // bgwNewsFeed
             // 
@@ -1326,6 +1244,7 @@
             this.btnClose.Size = new System.Drawing.Size(40, 40);
             this.btnClose.TabIndex = 53;
             this.btnClose.TabStop = false;
+            this.ttLocale.SetToolTip(this.btnClose, "Close");
             this.btnClose.Click += new System.EventHandler(this.btnClose_Click);
             this.btnClose.MouseEnter += new System.EventHandler(this.btnClose_MouseEnter);
             this.btnClose.MouseLeave += new System.EventHandler(this.btnClose_MouseLeave);
@@ -1340,6 +1259,7 @@
             this.btnMinimize.Size = new System.Drawing.Size(40, 40);
             this.btnMinimize.TabIndex = 54;
             this.btnMinimize.TabStop = false;
+            this.ttLocale.SetToolTip(this.btnMinimize, "Minimize");
             this.btnMinimize.Click += new System.EventHandler(this.btnMinimize_Click);
             this.btnMinimize.MouseEnter += new System.EventHandler(this.btnMinimize_MouseEnter);
             this.btnMinimize.MouseLeave += new System.EventHandler(this.btnMinimize_MouseLeave);
@@ -1358,6 +1278,13 @@
             this.clearPatchCacheToolStripMenuItem.Visible = false;
             this.clearPatchCacheToolStripMenuItem.Click += new System.EventHandler(this.clearPatchCacheToolStripMenuItem_Click);
             // 
+            // bgwClient
+            // 
+            this.bgwClient.WorkerReportsProgress = true;
+            this.bgwClient.DoWork += new System.ComponentModel.DoWorkEventHandler(this.bgwClient_DoWork);
+            this.bgwClient.ProgressChanged += new System.ComponentModel.ProgressChangedEventHandler(this.bgwClient_ProgressChanged);
+            this.bgwClient.RunWorkerCompleted += new System.ComponentModel.RunWorkerCompletedEventHandler(this.bgwClient_RunWorkerCompleted);
+            // 
             // LauncherForm
             // 
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.None;
@@ -1369,6 +1296,7 @@
             this.Controls.Add(this.lDownloadLauncherUpdate);
             this.Controls.Add(this.lLoadedConfig);
             this.Controls.Add(this.btnSystem);
+            this.Controls.Add(this.btnSettings);
             this.Controls.Add(this.lAppVersion);
             this.Controls.Add(this.btnDiscord);
             this.Controls.Add(this.btnGithub);
@@ -1428,8 +1356,6 @@
         private System.Windows.Forms.PictureBox btnGithub;
         private System.Windows.Forms.PictureBox btnDiscord;
         private System.Windows.Forms.TextBox eServerIP;
-        private System.Windows.Forms.Label lPathToGameLabel;
-        private System.Windows.Forms.Label lIPAddress;
         private System.Windows.Forms.ComboBox cbLoginList;
         private System.Windows.Forms.Label lAppVersion;
         private System.Windows.Forms.Label lLogin;
@@ -1443,17 +1369,11 @@
         private System.Windows.Forms.ContextMenuStrip cmsAAEmuButton;
         private System.Windows.Forms.Label lSettingsBack;
         private System.Windows.Forms.Label lGamePath;
-        private System.Windows.Forms.Label lHideSplash;
         private System.Windows.Forms.Label cbHideSplash;
         private System.Windows.Forms.Label cbSkipIntro;
-        private System.Windows.Forms.Label lSkipIntro;
         private System.Windows.Forms.Label cbSaveUser;
-        private System.Windows.Forms.Label lSaveUser;
         private System.Windows.Forms.Label lGameClientType;
         private System.Windows.Forms.Label cbUpdateLocale;
-        private System.Windows.Forms.Label lUpdateLocale;
-        private System.Windows.Forms.Label cbAllowUpdates;
-        private System.Windows.Forms.Label lAllowUpdates;
         private System.Windows.Forms.ContextMenuStrip cmsGitHub;
         private System.Windows.Forms.ToolStripMenuItem aAEmuServerToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem aAEmuLauncherToolStripMenuItem;
@@ -1529,6 +1449,9 @@
         private System.Windows.Forms.ToolStripSeparator miLocaleS3;
         private System.Windows.Forms.ToolStripMenuItem svenskaToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem clearPatchCacheToolStripMenuItem;
+        private System.Windows.Forms.Label bntRegister;
+        private System.Windows.Forms.Label ISettingsCancel;
+        private System.ComponentModel.BackgroundWorker bgwClient;
     }
 }
 
